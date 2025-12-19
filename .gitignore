@@ -1,1 +1,33 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment variables
 .env
+.env.local
+
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+.eslintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backend / Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Resume Screener Specific
+chroma_db/
+uploads/
+logs/
+*.log

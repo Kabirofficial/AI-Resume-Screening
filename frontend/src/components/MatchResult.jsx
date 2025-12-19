@@ -1,55 +1,113 @@
-import React from 'react';
-import { CheckCircle, AlertCircle, Briefcase } from 'lucide-react';
+import React from "react";
+import { CheckCircle, AlertCircle, Briefcase, Mail } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function MatchResult({ data }) {
-  // Simple inline conditional logic for colors
-  const scoreColor = data.match_score >= 80 ? "bg-green-100 text-green-700 border-green-200" 
-    : data.match_score >= 50 ? "bg-yellow-100 text-yellow-700 border-yellow-200" 
-    : "bg-red-100 text-red-700 border-red-200";
+  const scoreColor =
+    data.match_score >= 80
+      ? "text-emerald-400"
+      : data.match_score >= 50
+      ? "text-amber-400"
+      : "text-rose-400";
+
+  const matchPercentage = Math.round(data.match_score);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-start">
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900">{data.candidate_name}</h3>
-          <p className="text-gray-500 text-sm flex items-center gap-1 mt-1">
-            <Briefcase className="w-4 h-4" /> {data.experience_years} Years Experience
-          </p>
-        </div>
-        <div className={`flex items-center justify-center w-16 h-16 rounded-2xl font-bold text-xl border-2 ${scoreColor}`}>
-          {data.match_score}%
-        </div>
-      </div>
-
-      <div className="p-6 space-y-6">
-        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-          <p className="text-gray-700 italic text-sm">"{data.summary}"</p>
+    <div className="glass-card rounded-xl p-6 hover:border-indigo-500/30 transition-all duration-300 group hover:shadow-lg hover:shadow-indigo-500/10">
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+        <div className="shrink-0 mx-auto md:mx-0 flex items-center justify-center p-6 bg-slate-800/50 rounded-xl border border-slate-700/50">
+          <span className={`text-3xl font-bold ${scoreColor}`}>
+            {matchPercentage}%
+          </span>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grow w-full space-y-4">
           <div>
-            <h4 className="font-semibold text-green-800 flex items-center gap-2 mb-3 text-sm uppercase">
-              <CheckCircle className="w-4 h-4" /> Strengths
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {data.strengths.map((s, i) => (
-                <span key={i} className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-100">
-                  {s}
-                </span>
-              ))}
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-xl font-bold text-(--color-text) group-hover:text-(--color-primary) transition-colors">
+                  {data.name}
+                </h3>
+                <div className="flex items-center gap-2 text-slate-400 text-sm mt-1">
+                  <Mail className="w-3.5 h-3.5" />
+                  {data.email}
+                </div>
+              </div>
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                  matchPercentage >= 70
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                    : matchPercentage >= 40
+                    ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                    : "bg-red-500/10 text-red-400 border-red-500/20"
+                }`}
+              >
+                {matchPercentage >= 70
+                  ? "High Match"
+                  : matchPercentage >= 40
+                  ? "Potential"
+                  : "Low Match"}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/50 border border-slate-700 text-slate-300 text-xs font-medium">
+                <Briefcase className="w-3.5 h-3.5 text-(--color-tertiary)" />
+                {data.experience}
+              </div>
             </div>
           </div>
-          
-          <div>
-            <h4 className="font-semibold text-red-800 flex items-center gap-2 mb-3 text-sm uppercase">
-              <AlertCircle className="w-4 h-4" /> Missing
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {data.missing_skills.map((s, i) => (
-                <span key={i} className="bg-red-50 text-red-700 px-3 py-1 rounded-full text-xs font-medium border border-red-100">
-                  {s}
-                </span>
-              ))}
+
+          <p className="text-slate-400 text-sm leading-relaxed border-l-2 border-slate-700 pl-3">
+            {data.summary}
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-4 pt-2">
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />{" "}
+                Strengths
+              </h4>
+              <ul className="space-y-1">
+                {data.strengths && data.strengths.length > 0 ? (
+                  data.strengths.map((item, i) => (
+                    <li
+                      key={i}
+                      className="text-sm text-slate-300 flex items-start gap-2"
+                    >
+                      <span className="w-1 h-1 rounded-full bg-emerald-400 mt-2 shrink-0"></span>
+                      {item}
+                    </li>
+                  ))
+                ) : (
+                  <li className="text-sm text-slate-500 italic">
+                    None detected
+                  </li>
+                )}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-400" /> Missing
+                Skills
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {data.missing_skills && data.missing_skills.length > 0 ? (
+                  data.missing_skills.map((kw, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-0.5 rounded text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                    >
+                      {kw}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-sm text-slate-500 italic">
+                    None detected
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
